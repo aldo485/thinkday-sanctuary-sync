@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Think Day Sanctuary</title>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+    <div id="app-container">
+        <main>
+            <!-- DASHBOARD -->
+            <section id="dashboard-view" class="view">
+                <header class="view-header">
+                    <h1>Think Day Sanctuary</h1>
+                    <p class="subtitle">A private space for clarity, motivation, and courage.</p>
+                </header>
+                <div class="main-action-container">
+                    <button id="start-new-day-btn" class="btn-primary">Start a New Think Day</button>
+                </div>
+                <div class="toolbox-container">
+                    <h2>The Toolbox</h2>
+                    <p>For quick, focused reflections.</p>
+                    <div class="toolbox-actions">
+                        <button class="tool-btn" data-tool="wheel-of-life-view">Assess my Wheel of Life</button>
+                        <button class="tool-btn" data-tool="fear-setting-view">Work Through a Fear</button>
+                        <button class="tool-btn" data-tool="journaling-view">Explore Journal Prompts</button>
+                    </div>
+                </div>
+                <div class="recent-actions">
+                    <h2>Recent Action Items</h2>
+                    <div id="recent-actions-list">
+                        <!-- JS will populate this -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- GUIDED SESSION -->
+            <div id="guided-session-container" class="hidden">
+                <section id="wheel-of-life-view" class="view hidden">
+                    <header class="view-header">
+                        <h2>Step 1: The Wheel of Life</h2>
+                        <p>Rate your satisfaction from 1 (center) to 10 (edge).</p>
+                    </header>
+                    <div class="wheel-content">
+                        <div id="spiderweb-chart-container">
+                            <canvas id="wheel-of-life-canvas" width="400" height="400" aria-label="Wheel of Life Chart"></canvas>
+                        </div>
+                        <div id="wheel-sliders-container"></div>
+                    </div>
+                </section>
+
+                <section id="fear-setting-view" class="view hidden">
+                    <header class="view-header">
+                        <h2>Step 2: Fear-Setting</h2>
+                        <p>Confront what holds you back to find the path forward.</p>
+                    </header>
+                    <div id="fear-catalyst-container">
+                        <label for="fear-catalyst-prompt">What would I do if I knew I couldn't fail?</label>
+                        <textarea id="fear-catalyst-prompt" rows="5" placeholder="Write down the first thing that pops into your head..."></textarea>
+                        <button id="go-deeper-btn" class="btn-secondary">Go Deeper & Define Your Fears</button>
+                    </div>
+                    <div id="fear-deep-dive-container" class="hidden">
+                        <nav class="tab-nav" role="tablist">
+                            <button class="tab-btn active" data-tab="define" role="tab" aria-selected="true">1. Define</button>
+                            <button class="tab-btn" data-tab="benefits" role="tab" aria-selected="false">2. Benefits</button>
+                            <button class="tab-btn" data-tab="cost" role="tab" aria-selected="false">3. Cost of Inaction</button>
+                        </nav>
+                        <div id="define-tab-content" class="tab-content">
+                            <h3>Define your nightmare. What are the absolute worst things that could happen?</h3>
+                            <div id="fear-define-list"></div>
+                            <button id="add-fear-btn" class="btn-secondary">+ Add Fear to Analyze</button>
+                        </div>
+                        <div id="benefits-tab-content" class="tab-content hidden">
+                             <label for="benefits-textarea">What are the potential benefits of an attempt or partial success?</label>
+                             <textarea id="benefits-textarea" rows="10" placeholder="Think about confidence, skills, financial, personal growth..."></textarea>
+                        </div>
+                        <div id="cost-tab-content" class="tab-content hidden">
+                            <h3>What might be the cost of inaction (emotionally, physically, financially) in...</h3>
+                            <label for="cost-6-months">6 Months?</label><textarea id="cost-6-months" rows="4"></textarea>
+                            <label for="cost-1-year">1 Year?</label><textarea id="cost-1-year" rows="4"></textarea>
+                            <label for="cost-3-years">3 Years?</label><textarea id="cost-3-years" rows="4"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="journaling-view" class="view hidden">
+                    <header class="view-header">
+                        <h2>Step 3: Journaling Prompts</h2>
+                        <p>Select the questions that call to you today, then start journaling.</p>
+                    </header>
+                    <div id="prompt-selection-container"></div>
+                    <button id="start-journaling-btn" class="btn-primary" disabled>Start Journaling</button>
+                    <div id="journaling-interface-container" class="hidden">
+                        <h3 id="current-prompt-text"></h3>
+                        <div id="editor-container">
+                            <div id="journal-editor" contenteditable="true" role="textbox"></div>
+                        </div>
+                        <div class="prompt-nav">
+                            <button id="prev-prompt-btn">Previous</button>
+                            <span id="prompt-progress"></span>
+                            <button id="next-prompt-btn">Next</button>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="action-steps-view" class="view hidden">
+                    <header class="view-header">
+                        <h2>Step 4: Your Action Plan</h2>
+                        <p>Commit to a decision and define your next concrete steps.</p>
+                    </header>
+                    <div id="action-plan-editor">
+                        <textarea id="action-plan-textarea" rows="15"></textarea>
+                    </div>
+                    <div class="action-buttons-container">
+                        <button id="copy-asana-btn" class="btn-secondary">Copy Action Plan for Asana</button>
+                        <div class="calendar-reminder">
+                            <input type="date" id="review-date-picker" aria-label="Review Date">
+                            <button id="download-ics-btn" class="btn-secondary">Download Calendar Reminder</button>
+                        </div>
+                    </div>
+                </section>
+                
+                <nav id="session-nav" class="hidden">
+                    <button id="prev-step-btn" class="btn-secondary">← Back</button>
+                    <button id="next-step-btn" class="btn-primary">Next →</button>
+                    <button id="complete-session-btn" class="btn-primary hidden">Complete & Save Think Day</button>
+                </nav>
+            </div> 
+
+            <section id="journal-view" class="view hidden">
+                <header class="view-header">
+                    <h2>My Journal</h2>
+                    <p>A log of all your past Think Day sessions.</p>
+                </header>
+                <div id="journal-list-container"></div>
+            </section>
+            
+            <section id="settings-view" class="view hidden">
+                <header class="view-header"><h2>Settings</h2></header>
+                <div class="settings-group">
+                    <h3>Customize Wheel of Life</h3>
+                    <div id="wheel-customization-container"></div>
+                    <button id="save-wheel-settings-btn" class="btn-secondary">Save Changes</button>
+                </div>
+                <div class="settings-group">
+                    <h3>Customize Journaling Prompts</h3>
+                    <div id="prompts-customization-container"></div>
+                     <div class="add-prompt-form">
+                        <input type="text" id="new-prompt-input" placeholder="Add a new prompt...">
+                        <button id="add-prompt-btn" class="btn-secondary">Add Prompt</button>
+                     </div>
+                </div>
+                <div class="settings-group">
+                    <h3>Data Management</h3>
+                    <p>Your data is stored only on this browser. You can back it up here.</p>
+                    <button id="export-data-btn" class="btn-secondary">📥 Backup (Export) Data</button>
+                    <label for="import-data-input" class="btn-secondary">📤 Restore (Import) Data</label>
+                    <input type="file" id="import-data-input" accept=".json" class="hidden">
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <nav id="main-nav">
+                <button data-view="dashboard-view" class="active">Dashboard</button>
+                <button data-view="journal-view">Journal</button>
+                <button data-view="settings-view">Settings</button>
+            </nav>
+            <p class="privacy-notice">Your data is saved privately on this device and is never sent to a server.</p>
+        </footer>
+    </div>
+</body>
+</html>
