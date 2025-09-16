@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { RatingInput } from '@/components/ui/rating-input';
 import { useThinkDay } from '@/contexts/ThinkDayContext';
-import { AlertTriangle, Target, Shield, Plus, X, Lightbulb } from 'lucide-react';
+import { AlertTriangle, Target, Shield, Plus, X, Lightbulb, Activity, TrendingUp } from 'lucide-react';
 
 const FearSetting = () => {
   const { state, dispatch } = useThinkDay();
@@ -50,7 +50,7 @@ const FearSetting = () => {
     setSelectedFearIndex(fearData.fears.length);
   };
 
-  const handleUpdateFear = (index: number, field: 'prevent' | 'repair', value: string) => {
+  const handleUpdateFear = (index: number, field: 'prevent' | 'repair' | 'likelihood' | 'impact', value: string | number) => {
     const updatedFears = [...fearData.fears];
     updatedFears[index] = {
       ...updatedFears[index],
@@ -199,7 +199,45 @@ const FearSetting = () => {
                   Analyzing: "{selectedFear.fear}"
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
+                {/* Risk Assessment */}
+                <div className="grid md:grid-cols-2 gap-4 p-4 bg-surface/50 rounded-lg border">
+                  <RatingInput
+                    value={selectedFear.likelihood}
+                    onChange={(value) => handleUpdateFear(selectedFearIndex!, 'likelihood', value)}
+                    max={10}
+                    label="Likelihood"
+                    description="How likely is this fear to actually happen? (1-10)"
+                    className="flex-1"
+                  />
+                  
+                  <RatingInput
+                    value={selectedFear.impact}
+                    onChange={(value) => handleUpdateFear(selectedFearIndex!, 'impact', value)}
+                    max={10}
+                    label="Impact"
+                    description="How severe would the consequences be? (1-10)"
+                    className="flex-1"
+                  />
+                  
+                  <div className="md:col-span-2 mt-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Activity className="h-4 w-4" />
+                      <span className="font-medium">Risk Score:</span>
+                      <Badge variant={
+                        (selectedFear.likelihood * selectedFear.impact) >= 70 ? "destructive" :
+                        (selectedFear.likelihood * selectedFear.impact) >= 40 ? "default" : "secondary"
+                      }>
+                        {selectedFear.likelihood * selectedFear.impact}/100
+                      </Badge>
+                      <span className="text-muted-foreground ml-2">
+                        {(selectedFear.likelihood * selectedFear.impact) >= 70 ? "High Risk" :
+                         (selectedFear.likelihood * selectedFear.impact) >= 40 ? "Medium Risk" : "Low Risk"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <Label className="font-medium mb-2 block flex items-center gap-2">
                     <Shield className="h-4 w-4 text-blue-500" />
