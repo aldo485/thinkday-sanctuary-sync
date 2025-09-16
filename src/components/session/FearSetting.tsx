@@ -33,7 +33,9 @@ const FearSetting = () => {
     const newFear = {
       fear: currentFear.trim(),
       prevent: '',
-      repair: ''
+      repair: '',
+      likelihood: 5,
+      impact: 5
     };
 
     dispatch({

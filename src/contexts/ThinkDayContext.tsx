@@ -5,6 +5,8 @@ import { useToast } from '@/hooks/use-toast';
 export interface WheelOfLifeData {
   categories: string[];
   scores: number[];
+  satisfaction: number[];
+  notes?: string;
 }
 
 export interface FearSettingData {
@@ -13,6 +15,8 @@ export interface FearSettingData {
     fear: string;
     prevent: string;
     repair: string;
+    likelihood: number; // 1-10 rating
+    impact: number; // 1-10 rating
   }>;
   benefits: string;
   costs: {
@@ -25,6 +29,8 @@ export interface FearSettingData {
 export interface JournalEntry {
   prompt: string;
   response: string;
+  priority?: number; // 1-5 stars for insight priority
+  category?: 'reflection' | 'growth' | 'relationship' | 'career' | 'health' | 'financial';
 }
 
 export interface ThinkDaySession {
@@ -36,6 +42,8 @@ export interface ThinkDaySession {
   actionSteps: string;
   reviewDate?: string;
   isComplete: boolean;
+  sessionRating?: number; // Overall session satisfaction 1-10
+  keyInsights?: string[]; // Main takeaways from the session
 }
 
 export interface AppSettings {

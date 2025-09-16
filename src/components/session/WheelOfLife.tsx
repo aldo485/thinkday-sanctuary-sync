@@ -11,6 +11,10 @@ const WheelOfLife = () => {
     state.currentSession?.wheelOfLife?.scores || 
     new Array(state.settings.wheelCategories.length).fill(5)
   );
+  const [satisfaction, setSatisfaction] = useState<number[]>(
+    state.currentSession?.wheelOfLife?.satisfaction || 
+    new Array(state.settings.wheelCategories.length).fill(5)
+  );
 
   const updateScore = (index: number, value: number[]) => {
     const newScores = [...scores];
@@ -23,6 +27,7 @@ const WheelOfLife = () => {
       payload: {
         categories: state.settings.wheelCategories,
         scores: newScores,
+        satisfaction: satisfaction,
       },
     });
   };
