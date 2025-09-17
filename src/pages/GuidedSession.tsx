@@ -8,12 +8,14 @@ import WheelOfLife from '@/components/session/WheelOfLife';
 import FearSetting from '@/components/session/FearSetting';
 import Journaling from '@/components/session/Journaling';
 import ActionSteps from '@/components/session/ActionSteps';
+import SessionSummary from '@/components/session/SessionSummary';
 
 const steps = [
   { name: 'Wheel of Life', component: WheelOfLife },
   { name: 'Fear Setting', component: FearSetting },
   { name: 'Journaling', component: Journaling },
   { name: 'Action Steps', component: ActionSteps },
+  { name: 'Session Summary', component: SessionSummary },
 ];
 
 const GuidedSession = () => {

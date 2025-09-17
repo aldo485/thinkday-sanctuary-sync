@@ -141,7 +141,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
     case 'NEXT_STEP':
       return {
         ...state,
-        currentStep: Math.min(state.currentStep + 1, 3),
+        currentStep: Math.min(state.currentStep + 1, 4),
       };
 
     case 'PREV_STEP':
