@@ -84,111 +84,98 @@ const WheelOfLife = () => {
 
   return (
     <div className="space-y-6">
-      {/* Main Assessment Card */}
+      {/* Main Assessment Card - Two Column Rating Grid */}
       <Card className="sanctuary-border">
         <CardHeader className="text-center">
           <CardTitle className="text-xl text-primary">Life Balance Assessment</CardTitle>
           <p className="text-muted-foreground">
-            Evaluate your current satisfaction and set goals for each life area.
+            Rate each area of your life. No scrolling required - everything is visible at once.
           </p>
         </CardHeader>
         <CardContent>
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Chart */}
-            <div className="flex justify-center">
-              <div className="w-80 h-80">
-                <WheelOfLifeChart
-                  categories={state.settings.wheelCategories}
-                  scores={scores}
-                  size={320}
-                />
-              </div>
-            </div>
+          {/* Two-column grid of all areas */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {state.settings.wheelCategories.map((category, index) => {
+              const areaStatus = getAreaStatus(scores[index], satisfaction[index]);
+              return (
+                <Card 
+                  key={category}
+                  className={`p-4 transition-all hover:shadow-md ${areaStatus.bg} border-l-4 ${
+                    areaStatus.status === 'excellent' ? 'border-l-green-500' :
+                    areaStatus.status === 'good' ? 'border-l-blue-500' :
+                    areaStatus.status === 'needs attention' ? 'border-l-yellow-500' :
+                    'border-l-red-500'
+                  }`}
+                >
+                  <div className="space-y-3">
+                    {/* Header with category and status */}
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-medium text-lg">{category}</h4>
+                      <Badge variant="outline" className={areaStatus.color}>
+                        {areaStatus.status}
+                      </Badge>
+                    </div>
 
-            {/* Quick Overview */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                Area Overview
-              </h3>
-              
-              {state.settings.wheelCategories.map((category, index) => {
-                const areaStatus = getAreaStatus(scores[index], satisfaction[index]);
-                return (
-                  <div 
-                    key={category}
-                    className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
-                      selectedArea === index ? 'ring-2 ring-primary' : ''
-                    } ${areaStatus.bg}`}
-                    onClick={() => setSelectedArea(selectedArea === index ? null : index)}
-                  >
-                    <div className="flex justify-between items-center">
-                      <div className="flex-1">
-                        <h4 className="font-medium">{category}</h4>
-                        <div className="flex items-center gap-4 mt-1">
-                          <ProgressIndicator 
-                            current={scores[index]} 
-                            total={10} 
-                            size="sm"
-                            showNumbers={false}
-                          />
-                          <Badge variant="outline" className={areaStatus.color}>
-                            {areaStatus.status}
-                          </Badge>
-                        </div>
+                    {/* Current Level Slider */}
+                    <div>
+                      <Label className="text-sm font-medium mb-2 block">Current Level</Label>
+                      <Slider
+                        value={[scores[index]]}
+                        onValueChange={(value) => updateScore(index, value)}
+                        max={10}
+                        min={1}
+                        step={1}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                        <span>Needs Work (1)</span>
+                        <span className="font-medium">{scores[index]}/10</span>
+                        <span>Excellent (10)</span>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        {selectedArea === index ? 'Hide' : 'Details'}
+                    </div>
+
+                    {/* Satisfaction Rating */}
+                    <RatingInput
+                      value={satisfaction[index]}
+                      onChange={(value) => updateSatisfaction(index, value)}
+                      max={10}
+                      label="Satisfaction Level"
+                      description="How satisfied are you with this area?"
+                    />
+
+                    {/* Expandable Goals & Actions */}
+                    <div className="pt-2 border-t">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedArea(selectedArea === index ? null : index)}
+                        className="w-full justify-between text-sm"
+                      >
+                        {selectedArea === index ? 'Hide Goals & Actions' : 'Set Goals & Actions'}
+                        {selectedArea === index ? 
+                          <X className="h-4 w-4" /> : 
+                          <Target className="h-4 w-4" />
+                        }
                       </Button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </Card>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
 
-      {/* Detailed Area Analysis */}
+      {/* Detailed Goal & Action Setting */}
       {selectedArea !== null && (
         <Card className="sanctuary-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5 text-primary" />
-              {state.settings.wheelCategories[selectedArea]} - Detailed Analysis
+              {state.settings.wheelCategories[selectedArea]} - Goals & Actions
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Ratings Section */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Current Level</Label>
-                  <Slider
-                    value={[scores[selectedArea]]}
-                    onValueChange={(value) => updateScore(selectedArea, value)}
-                    max={10}
-                    min={1}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <span>Needs Work (1)</span>
-                    <span className="font-medium">{scores[selectedArea]}/10</span>
-                    <span>Excellent (10)</span>
-                  </div>
-                </div>
-              </div>
-
-              <RatingInput
-                value={satisfaction[selectedArea]}
-                onChange={(value) => updateSatisfaction(selectedArea, value)}
-                max={10}
-                label="Satisfaction Level"
-                description="How satisfied are you with this area?"
-              />
-            </div>
-
             {/* Goal Setting */}
             <div className="space-y-4">
               <Label className="text-sm font-medium">Goal for this area</Label>
@@ -244,15 +231,26 @@ const WheelOfLife = () => {
         </Card>
       )}
 
-      {/* Summary Insights */}
+      {/* Spider Chart Summary */}
       <Card className="sanctuary-border">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-primary" />
-            Life Balance Insights
+            <TrendingUp className="h-5 w-5 text-primary" />
+            Your Life Balance Visualization
           </CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="flex justify-center mb-6">
+            <div className="w-80 h-80">
+              <WheelOfLifeChart
+                categories={state.settings.wheelCategories}
+                scores={scores}
+                size={320}
+              />
+            </div>
+          </div>
+          
+          {/* Summary Insights */}
           <div className="grid md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="text-2xl font-bold text-green-600">
