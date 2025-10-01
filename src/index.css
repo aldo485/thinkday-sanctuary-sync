@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Think Day Sanctuary Design System - Dark Mode Sanctuary Theme */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 @layer base {
   :root {
@@ -187,15 +188,5 @@
   }
   to {
     box-shadow: 0 0 20px hsl(var(--sanctuary-gold) / 0.4), 0 0 30px hsl(var(--sanctuary-gold) / 0.1);
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
   }
 }
